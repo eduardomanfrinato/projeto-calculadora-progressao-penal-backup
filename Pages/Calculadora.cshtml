@@ -1,0 +1,159 @@
+﻿@page
+@model CalculadoraProgressaoWeb.Pages.CalculadoraModel
+@{
+    ViewData["Title"] = "Calculadora de Progressão de Regime";
+}
+
+<h2 class="mb-4">Calculadora de Progressão de Regime</h2>
+
+<form method="post" enctype="multipart/form-data">
+
+    <!-- =========================
+         IDENTIFICAÇÃO DO APENADO
+    ========================== -->
+    <fieldset class="border p-3 mb-4">
+        <legend class="w-auto px-2">Identificação do apenado</legend>
+
+        <div class="form-group mb-3">
+            <label>Nome do apenado</label>
+            <input asp-for="Input.NomeApenado" class="form-control" />
+        </div>
+
+        <div class="form-group mb-3">
+            <label>Data-base</label>
+            <input asp-for="Input.DataBase" type="date" class="form-control" />
+        </div>
+
+        <div class="form-group mb-3">
+            <label>Regime inicial</label>
+            <select asp-for="Input.RegimeInicial" class="form-control">
+                <option>Fechado</option>
+                <option>Semiaberto</option>
+                <option>Aberto</option>
+            </select>
+        </div>
+    </fieldset>
+
+    <!-- =========================
+         PENA
+    ========================== -->
+    <fieldset class="border p-3 mb-4">
+        <legend class="w-auto px-2">Pena aplicada</legend>
+
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label>Pena total (meses)</label>
+                <input asp-for="Input.PenaTotalMeses" class="form-control" />
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label>Pena total (dias)</label>
+                <input asp-for="Input.PenaTotalDias" class="form-control" />
+            </div>
+        </div>
+    </fieldset>
+
+    <!-- =========================
+         NATUREZA DO CRIME
+    ========================== -->
+    <fieldset class="border p-3 mb-4">
+        <legend class="w-auto px-2">Natureza do crime</legend>
+
+        <div class="form-group mb-3">
+            <label>Tipo de crime</label>
+            <select asp-for="Input.TipoCrime" class="form-control">
+                <option value="Comum">Crime comum</option>
+                <option value="Hediondo">Crime hediondo</option>
+            </select>
+        </div>
+
+        <div class="form-check">
+            <input asp-for="Input.ViolenciaOuGraveAmeaca" class="form-check-input" />
+            <label class="form-check-label">Violência ou grave ameaça</label>
+        </div>
+
+        <div class="form-check">
+            <input asp-for="Input.ResultadoMorte" class="form-check-input" />
+            <label class="form-check-label">Resultado morte</label>
+        </div>
+
+        <div class="form-check">
+            <input asp-for="Input.Feminicidio" class="form-check-input" />
+            <label class="form-check-label">Feminicídio</label>
+        </div>
+
+        <div class="form-check">
+            <input asp-for="Input.OrganizacaoCriminosa" class="form-check-input" />
+            <label class="form-check-label">Organização criminosa</label>
+        </div>
+    </fieldset>
+
+    <!-- =========================
+         SITUAÇÃO JURÍDICA
+    ========================== -->
+    <fieldset class="border p-3 mb-4">
+        <legend class="w-auto px-2">Situação jurídica</legend>
+
+        <div class="form-check">
+            <input asp-for="Input.Reincidente" class="form-check-input" />
+            <label class="form-check-label">Reincidente</label>
+        </div>
+
+        <div class="row mt-3">
+            <div class="col-md-6">
+                <label>Dias de detração</label>
+                <input asp-for="Input.DiasDetracao" class="form-control" />
+            </div>
+
+            <div class="col-md-6">
+                <label>Dias de remição</label>
+                <input asp-for="Input.DiasRemicao" class="form-control" />
+            </div>
+        </div>
+    </fieldset>
+
+    <button type="submit" asp-page-handler="Calcular" class="btn btn-primary mt-3">
+        Calcular
+    </button>
+
+    <!-- =========================
+         RESULTADO + PDF
+    ========================== -->
+    @if (Model.Resultado != null)
+    {
+        <hr />
+
+        <h4>Resultado do cálculo</h4>
+
+        <p><strong>Percentual aplicado:</strong> @Model.Resultado.PercentualAplicado%</p>
+        <p><strong>Data estimada para progressão:</strong> @Model.Resultado.DataProgressao.ToString("dd/MM/yyyy")</p>
+
+        <fieldset class="border p-3 mt-4">
+            <legend class="w-auto px-2">Identificação do escritório / advogado</legend>
+
+            <div class="form-group mb-3">
+                <label>Nome do escritório ou advogado</label>
+                <input asp-for="PdfInstitucional.NomeEscritorioOuAdvogado" class="form-control" />
+            </div>
+
+            <div class="form-group mb-3">
+                <label>OAB</label>
+                <input asp-for="PdfInstitucional.Oab" class="form-control" />
+            </div>
+
+            <div class="form-group mb-3">
+                <label>Observações</label>
+                <textarea asp-for="PdfInstitucional.ObservacoesAdvogado" class="form-control"></textarea>
+            </div>
+
+            <div class="form-group mb-3">
+                <label>Logo (opcional)</label>
+                <input asp-for="PdfInstitucional.Logo" type="file" class="form-control" />
+            </div>
+        </fieldset>
+
+        <button type="submit" asp-page-handler="GerarPdf" class="btn btn-success mt-3">
+            Gerar PDF
+        </button>
+    }
+</form>
